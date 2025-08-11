@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 const EditProfile = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.data); // lấy user từ Redux
+  const token = localStorage.getItem("accessToken");
   const [formData, setFormData] = useState(null);
   const [beforeImg, setBeforeImg] = useState("");
   const [afterImg, setAfterImg] = useState("");
@@ -14,7 +15,6 @@ const EditProfile = () => {
 
   // Khi user từ Redux thay đổi, set vào formData
   useEffect(() => {
-  
     if (user) {
       setFormData(user);
     }
@@ -23,15 +23,24 @@ const EditProfile = () => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (files) {
-      if (name === "beforeImg") {
-        setBeforeImg(files[0]);
-      } else if (name === "afterImg") {
-        setAfterImg(files[0]);
-      } else if (name === "avatar") {
-        setFormData({ ...formData, avatar: URL.createObjectURL(files[0]) });
-        setAvatarImg(files[0]);
+      const file = files[0];
+
+      // Giới hạn dung lượng 5MB
+      if (file.size > 5 * 1024 * 1024) {
+        alert("File vượt quá 5MB, vui lòng chọn file nhỏ hơn.");
+        return;
       }
-      setFormData({ ...formData, [name]: URL.createObjectURL(files[0]) });
+
+      if (name === "beforeImg") {
+        setBeforeImg(file);
+      } else if (name === "afterImg") {
+        setAfterImg(file);
+      } else if (name === "avatar") {
+        setFormData({ ...formData, avatar: URL.createObjectURL(file) });
+        setAvatarImg(file);
+      }
+
+      setFormData({ ...formData, [name]: URL.createObjectURL(file) });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -40,8 +49,21 @@ const EditProfile = () => {
   const uploadImage = async (file) => {
     const data = new FormData();
     data.append("image", file);
-    const res = await axios.post(`${VARIABLE.url}/upload`, data);
+    const res = await axios.post(`${VARIABLE.url}/upload`, data, {
+      headers: {
+        x_authorization: `${token}`,
+      },
+    });
+
     return res.data.url;
+  };
+
+  const updateProfile = async (updatedData) => {
+    await axios.put(`${VARIABLE.url}/user/edit`, updatedData, {
+      headers: {
+        x_authorization: `${token}`,
+      },
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -67,7 +89,12 @@ const EditProfile = () => {
         avatar: avatarImageUrl,
       };
 
-      await axios.put(`${VARIABLE.url}/user/edit`, updatedData);
+      await axios.put(`${VARIABLE.url}/user/edit`, updatedData, {
+        headers: {
+          x_authorization: `${token}`,
+        },
+      });
+
       alert("Cập nhật hồ sơ thành công!");
       navigate("/profile");
     } catch (err) {

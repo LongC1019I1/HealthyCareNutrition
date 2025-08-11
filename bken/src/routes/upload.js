@@ -7,6 +7,7 @@ const { isAuth } = require("../app/sub/subFunc");
 router.post(
   "/",
   isAuth,
+
   upload.single("image"),
   resizeImage,
   uploadController.uploadImage

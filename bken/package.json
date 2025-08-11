@@ -46,7 +46,8 @@
     "mongoose-slug-generator": "^1.0.4",
     "multer": "^2.0.2",
     "rand-token": "^1.0.1",
-    "sass-embedded": "^1.89.2"
+    "sass-embedded": "^1.89.2",
+    "sharp": "^0.34.3"
   },
   "devDependencies": {
     "morgan": "^1.10.0",
