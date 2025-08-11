@@ -48,10 +48,8 @@ const resizeImage = async (req, res, next) => {
     .resize({ width: 1080, withoutEnlargement: true })
     .jpeg({ quality: 80 })
     .toFile(outputPath + "_tmp");
-
   fs.unlinkSync(req.file.path); // xóa file gốc
   fs.renameSync(outputPath + "_tmp", outputPath); // đổi tên file nén thành file gốc
-
   next();
 };
 

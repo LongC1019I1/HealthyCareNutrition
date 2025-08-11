@@ -21,7 +21,7 @@ class UserController {
       user.bmi = req.body.bmi;
       user.duration = req.body.duration;
       user.story = req.body.story;
-      console.error(req.body);
+    
 
       // Nếu có file ảnh mới thì xóa ảnh cũ
       if (req.body?.avatar) {
