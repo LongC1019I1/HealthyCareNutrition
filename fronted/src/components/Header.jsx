@@ -93,7 +93,7 @@ function Header() {
                 <li>
                   <Link
                     className="dropdown-item"
-                    to="/my-goals"
+                    to="/target"
                     onClick={() => setDropdownOpen(false)}
                   >
                     Mục tiêu của tôi

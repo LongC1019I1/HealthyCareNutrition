@@ -10,12 +10,12 @@ import Profile from "./Pages/Profile/Profile";
 import EditProfile from "./Pages/Profile/EditProfile";
 
 import { Routes, Route } from "react-router-dom";
+import Target from "./Pages/Target/Target";
 function App() {
   return (
     <>
       <div>
         <div className=" col-md-12 col-lg-12 rounded  ">
-  
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -23,6 +23,7 @@ function App() {
             <Route element={<ProtectedLayout />}>
               <Route path="/" element={<Profile />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/target" element={<Target />} />
               <Route path="/edit-profile" element={<EditProfile />} />
             </Route>
           </Routes>
