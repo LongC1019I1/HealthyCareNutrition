@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { formatDateToDDMMYYYY, formatDateToYYYYMMDD } from "../../utils/date";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import dayjs from "dayjs";
 import { VARIABLE } from "../../Data/variable"; // chỉnh nếu khác
 
 export default function Target() {
@@ -35,7 +37,6 @@ export default function Target() {
           setTracking(
             res.data.tracking.map((row) => ({
               ...row,
-              date: row.date ? formatDateToDDMMYYYY(row.date) : "",
             }))
           );
         }
@@ -53,6 +54,7 @@ export default function Target() {
   };
 
   const handleTrackingChange = (index, field, value) => {
+    console.log({ value });
     setTracking((arr) => {
       const newArr = [...arr];
       newArr[index] = { ...newArr[index], [field]: value };
@@ -63,7 +65,7 @@ export default function Target() {
   const addTrackingRow = () => {
     setTracking((arr) => [
       {
-        date: new Date().toISOString().slice(0, 10),
+        date: dayjs(new Date()).format("DD-MM-YYYY"),
         weight: "",
         fat: "",
         bone: "",
@@ -101,6 +103,8 @@ export default function Target() {
   };
 
   if (loading) return <div className="container py-4">Đang tải...</div>;
+
+  console.log({ tracking });
 
   return (
     <div className="container py-4">
@@ -243,17 +247,17 @@ export default function Target() {
               {tracking.map((row, idx) => (
                 <tr key={idx}>
                   <td>
-                    <input
-                      type="date"
-                      className="form-control form-control-sm"
-                      value={row.date || ""}
-                      onChange={(e) =>
+                    <DatePicker
+                      format="DD/MM/YYYY"
+                      onChange={(date) =>
                         handleTrackingChange(
                           idx,
                           "date",
-                          formatDateToDDMMYYYY(e.target.value)
+                          dayjs(date).format("DD-MM-YYYY")
                         )
                       }
+                      className="form-control form-control-sm"
+                      value={row.date || ""}
                     />
                   </td>
                   <td>

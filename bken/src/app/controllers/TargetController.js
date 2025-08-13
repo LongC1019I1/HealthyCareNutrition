@@ -24,27 +24,15 @@ exports.getTargets = async (req, res) => {
 exports.updateTargets = async (req, res) => {
   try {
     const { username } = req.params;
-    console.log("edit =>", username);
 
     if (!username) {
       return res.status(401).json({ error: "No user" });
     }
 
     let { goals, tracking } = req.body;
+    console.log(goals, tracking);
 
-    // Chuyển đổi ngày trong tracking sang định dạng dd-mm-yyyy
-    if (Array.isArray(tracking)) {
-      tracking = tracking.map(item => {
-        if (item.date) {
-          const d = new Date(item.date);
-          const day = String(d.getDate()).padStart(2, '0');
-          const month = String(d.getMonth() + 1).padStart(2, '0');
-          const year = d.getFullYear();
-          return { ...item, date: `${day}-${month}-${year}` };
-        }
-        return item;
-      });
-    }
+
 
     const doc = await Target.findOneAndUpdate(
       { username },
