@@ -80,14 +80,14 @@ class UserController {
 }
 
 function deleteOldImage(oldPath) {
-  console.error(oldPath);
+
   if (oldPath && oldPath.includes("/uploads/")) {
     const filePath = path.join(
       __dirname,
       "..", // quay về thư mục gốc server
       oldPath.replace("http://localhost:5000/", "")
     );
-    console.error({ filePath });
+
     fs.unlink(filePath, (err) => {
       if (err) console.error("Lỗi xóa ảnh cũ:", err);
     });
