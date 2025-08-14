@@ -22,7 +22,6 @@ const Profile = () => {
         });
 
         dispatch(setUser(res.data.user)); // gán dữ liệu user từ server
-        console.log({ res });
       } catch (err) {
         const accessToken = localStorage.getItem("accessToken");
 

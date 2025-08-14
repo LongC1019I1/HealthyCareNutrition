@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { VARIABLE } from "../../Data/variable";
 import { setUser } from "../../store/userSlice";
 import axios from "axios";
-
+import axiosInstance from "../../utils/axiosInstance";
 export default function ProtectedLayout() {
   const dispatch = useDispatch();
   const accessToken = localStorage.getItem("accessToken");
@@ -33,17 +33,14 @@ export default function ProtectedLayout() {
       try {
         const token = localStorage.getItem("accessToken");
         const userLogin = localStorage.getItem("userLogin");
-
-        const res = await axios.get(`${VARIABLE.url}/user/${userLogin}`, {
-          headers: {
-            x_authorization: `${token}`,
-          },
-        });
-
+        const res = await axiosInstance.get(`/user/${userLogin}`);
+        console.log({ res });
         dispatch(setUser(res.data.user));
       } catch (err) {
         localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         console.error("Lỗi khi lấy thông tin user:", err);
+        window.location.href = "/login";
       } finally {
         setLoading(false); // Dù thành công hay lỗi cũng tắt loading
       }
