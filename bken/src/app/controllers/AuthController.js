@@ -20,6 +20,8 @@ class AuthController {
         username: username,
         password: hashPassword,
       });
+
+      console.error({ hashPassword });
       createUser
         .save()
         .then(() =>
@@ -93,7 +95,6 @@ class AuthController {
     // Lấy access token từ header
     const accessTokenFromHeader = req.headers.x_authorization;
 
- 
     if (!accessTokenFromHeader) {
       return res.status(400).send("Không tìm thấy access token.");
     }

@@ -30,9 +30,7 @@ exports.updateTargets = async (req, res) => {
     }
 
     let { goals, tracking } = req.body;
-    console.log(goals, tracking);
-
-
+  
 
     const doc = await Target.findOneAndUpdate(
       { username },
