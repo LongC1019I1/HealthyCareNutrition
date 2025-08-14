@@ -6,8 +6,8 @@ const Schema = mongoose.Schema;
 
 const User = new Schema({
   username: { type: String, required: true, unique: true },
-  fullname: { type: String, required: true },
   password: { type: String, required: true },
+  fullname: { type: String, default: null },
   avatar: { type: String, default: null },
   age: { type: Number, default: null },
   height: { type: String, default: null },
@@ -34,7 +34,6 @@ User.statics.getUser = async function (username) {
     const user = await this.findOne({ username: username });
     return user;
   } catch (error) {
-
     return null;
   }
 };
