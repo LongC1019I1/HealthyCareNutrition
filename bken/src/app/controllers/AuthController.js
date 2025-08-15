@@ -21,7 +21,6 @@ class AuthController {
         password: hashPassword,
       });
 
-      console.error({ hashPassword });
       createUser
         .save()
         .then(() =>
