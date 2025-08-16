@@ -1,3 +1,3 @@
 export const VARIABLE = {
-  url: "http://localhost:5000",
+  url: "https://healthycarenutrition-backend-2.onrender.com",
 };

@@ -235,7 +235,7 @@ export default function Target() {
                 <th>Xương</th>
                 <th>Nước(%)</th>
                 <th>Cơ</th>
-                <th>Chỉ số</th>
+                <th>Chỉ số  cân đối</th>
                 <th>RMR</th>
                 <th>Tuổi sinh học</th>
                 <th>Mỡ nội tạng</th>

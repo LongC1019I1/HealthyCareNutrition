@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import { VARIABLE } from "../../Data/variable";
 
 function Register() {
   const navigation = useNavigate();
@@ -21,7 +22,7 @@ function Register() {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/auth/register", {
+      const response = await axios.post(`${VARIABLE.url}/auth/register`, {
         username,
         password,
       });
