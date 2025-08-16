@@ -6,7 +6,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import dayjs from "dayjs";
-import { VARIABLE } from "../../Data/variable"; // chỉnh nếu khác
+import { VARIABLE } from "../../Data/variable";
 
 export default function Target() {
   const token = localStorage.getItem("accessToken");
@@ -24,21 +24,12 @@ export default function Target() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // fetch user (nếu có endpoint /user/:username)
-        // const u = await axios.get(`${VARIABLE.url}/user/${username}`, { headers: { x_authorization: token }});
-        // setUser(u.data.user);
-
-        // fetch goals
         const res = await axios.get(`${VARIABLE.url}/target/${user.username}`, {
           headers: { x_authorization: token },
         });
         if (res.data?.goals) setGoals(res.data.goals);
         if (res.data?.tracking) {
-          setTracking(
-            res.data.tracking.map((row) => ({
-              ...row,
-            }))
-          );
+          setTracking(res.data.tracking);
         }
       } catch (err) {
         console.error("Fetch goals error", err);
@@ -54,7 +45,6 @@ export default function Target() {
   };
 
   const handleTrackingChange = (index, field, value) => {
-    console.log({ value });
     setTracking((arr) => {
       const newArr = [...arr];
       newArr[index] = { ...newArr[index], [field]: value };
@@ -104,113 +94,73 @@ export default function Target() {
 
   if (loading) return <div className="container py-4">Đang tải...</div>;
 
-  console.log({ tracking });
-
   return (
     <div className="container py-4">
-      {/* Avatar + tên (nếu có) */}
-      <div className="card mb-4 shadow-sm">
-        <div className="card-body d-flex align-items-center justify-content-center gap-3">
-          <div>
-            <img
-              src={(user && user.avatar) || "https://via.placeholder.com/80"}
-              alt="avatar"
-              className="rounded-circle mb-4"
-              style={{ width: 80, height: 80, objectFit: "cover" }}
-            />
-
-            <h5 className="mb-0">{(user && user.fullname) || "Người dùng"}</h5>
-            <small className="text-muted">
-              Cập nhật mục tiêu kiểm soát cân nặng
-            </small>
-          </div>
-        </div>
+      {/* Avatar + tên */}
+      <div className="card mb-4 shadow-sm text-center p-3">
+        <img
+          src={(user && user.avatar) || "https://via.placeholder.com/80"}
+          alt="avatar"
+          className="rounded-circle mx-auto mb-2"
+          style={{ width: 80, height: 80, objectFit: "cover" }}
+        />
+        <h5 className="mb-0">{(user && user.fullname) || "Người dùng"}</h5>
+        <small className="text-muted">Cập nhật mục tiêu kiểm soát cân nặng</small>
       </div>
 
+      {/* Form mục tiêu */}
       <form onSubmit={saveGoals} className="card p-3 mb-4 shadow-sm">
         <h5 className="mb-3">
           <i className="bi bi-flag-fill me-2"></i>Mục tiêu của tôi
         </h5>
         <div className="row g-3">
-          <div className="col-md-4">
+          {/* Responsive inputs */}
+          <div className="col-12 col-md-4">
             <label className="form-label">Số bước mục tiêu</label>
-            <div className="input-group">
-              <span className="input-group-text">
-                <i className="bi bi-shoe-fill"></i>
-              </span>
-              <input
-                className="form-control"
-                type="number"
-                value={goals.steps}
-                onChange={(e) => handleGoalChange("steps", e.target.value)}
-              />
-            </div>
+            <input
+              className="form-control"
+              type="number"
+              value={goals.steps}
+              onChange={(e) => handleGoalChange("steps", e.target.value)}
+            />
           </div>
-          <div className="col-md-4">
-            <label className="form-label">Mục tiêu cân nặng (kg)</label>
-            <div className="input-group">
-              <span className="input-group-text">
-                <i className="bi bi-person-fill"></i>
-              </span>
-              <input
-                className="form-control"
-                type="number"
-                value={goals.targetWeight}
-                onChange={(e) =>
-                  handleGoalChange("targetWeight", e.target.value)
-                }
-              />
-              <span className="input-group-text">kg</span>
-            </div>
+          <div className="col-12 col-md-4">
+            <label className="form-label">Cân nặng mục tiêu (kg)</label>
+            <input
+              className="form-control"
+              type="number"
+              value={goals.targetWeight}
+              onChange={(e) => handleGoalChange("targetWeight", e.target.value)}
+            />
           </div>
-          <div className="col-md-4">
+          <div className="col-12 col-md-4">
             <label className="form-label">Thời gian hoàn thành (tháng)</label>
-            <div className="input-group">
-              <span className="input-group-text">
-                <i className="bi bi-hourglass-split"></i>
-              </span>
-              <input
-                className="form-control"
-                type="number"
-                value={goals.finishMonths}
-                onChange={(e) =>
-                  handleGoalChange("finishMonths", e.target.value)
-                }
-              />
-            </div>
+            <input
+              className="form-control"
+              type="number"
+              value={goals.finishMonths}
+              onChange={(e) => handleGoalChange("finishMonths", e.target.value)}
+            />
           </div>
-
-          <div className="col-md-4">
+          <div className="col-12 col-md-6">
             <label className="form-label">Calo mục tiêu</label>
-            <div className="input-group">
-              <span className="input-group-text">
-                <i className="bi bi-fire"></i>
-              </span>
-              <input
-                className="form-control"
-                type="number"
-                value={goals.targetCalories}
-                onChange={(e) =>
-                  handleGoalChange("targetCalories", e.target.value)
-                }
-              />
-              <span className="input-group-text">kcal</span>
-            </div>
+            <input
+              className="form-control"
+              type="number"
+              value={goals.targetCalories}
+              onChange={(e) =>
+                handleGoalChange("targetCalories", e.target.value)
+              }
+            />
           </div>
-          <div className="col-md-4">
+          <div className="col-12 col-md-6">
             <label className="form-label">Giờ ngủ mục tiêu</label>
-            <div className="input-group">
-              <span className="input-group-text">
-                <i className="bi bi-moon-fill"></i>
-              </span>
-              <input
-                className="form-control"
-                type="number"
-                value={goals.sleepHours}
-                onChange={(e) => handleGoalChange("sleepHours", e.target.value)}
-              />
-              <span className="input-group-text">giờ</span>
-            </div>
+            <input
+              className="form-control"
+              type="number"
+              value={goals.sleepHours}
+              onChange={(e) => handleGoalChange("sleepHours", e.target.value)}
+            />
           </div>
         </div>
 
@@ -221,21 +171,24 @@ export default function Target() {
         </div>
       </form>
 
+      {/* Bảng theo dõi */}
       <div className="card p-3 shadow-sm">
         <h5 className="mb-3">
-          <i className="bi bi-clipboard-data-fill me-2"></i>Bảng theo dõi chỉ số
+          <i className="bi bi-clipboard-data-fill me-2"></i>Bảng theo dõi
         </h5>
-        <div className="table-responsive">
+
+        {/* Desktop: Table */}
+        <div className="d-none d-md-block table-responsive">
           <table className="table table-bordered table-sm align-middle">
             <thead className="table-light">
               <tr>
                 <th>Ngày</th>
                 <th>Cân nặng</th>
-                <th>Mỡ(%)</th>
+                <th>Mỡ (%)</th>
                 <th>Xương</th>
-                <th>Nước(%)</th>
+                <th>Nước (%)</th>
                 <th>Cơ</th>
-                <th>Chỉ số  cân đối</th>
+                <th>Cân đối</th>
                 <th>RMR</th>
                 <th>Tuổi sinh học</th>
                 <th>Mỡ nội tạng</th>
@@ -248,7 +201,6 @@ export default function Target() {
                 <tr key={idx}>
                   <td>
                     <DatePicker
-                      format="DD/MM/YYYY"
                       onChange={(date) =>
                         handleTrackingChange(
                           idx,
@@ -260,110 +212,18 @@ export default function Target() {
                       value={row.date || ""}
                     />
                   </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="form-control form-control-sm"
-                      value={row.weight || ""}
-                      onChange={(e) =>
-                        handleTrackingChange(idx, "weight", e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="form-control form-control-sm"
-                      value={row.fat || ""}
-                      onChange={(e) =>
-                        handleTrackingChange(idx, "fat", e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="form-control form-control-sm"
-                      value={row.bone || ""}
-                      onChange={(e) =>
-                        handleTrackingChange(idx, "bone", e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="form-control form-control-sm"
-                      value={row.water || ""}
-                      onChange={(e) =>
-                        handleTrackingChange(idx, "water", e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="form-control form-control-sm"
-                      value={row.muscle || ""}
-                      onChange={(e) =>
-                        handleTrackingChange(idx, "muscle", e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="form-control form-control-sm"
-                      value={row.balanceIndex || ""}
-                      onChange={(e) =>
-                        handleTrackingChange(
-                          idx,
-                          "balanceIndex",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="form-control form-control-sm"
-                      value={row.rmr || ""}
-                      onChange={(e) =>
-                        handleTrackingChange(idx, "rmr", e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="form-control form-control-sm"
-                      value={row.bioAge || ""}
-                      onChange={(e) =>
-                        handleTrackingChange(idx, "bioAge", e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="form-control form-control-sm"
-                      value={row.visceralFat || ""}
-                      onChange={(e) =>
-                        handleTrackingChange(idx, "visceralFat", e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="form-control form-control-sm"
-                      value={row.waist || ""}
-                      onChange={(e) =>
-                        handleTrackingChange(idx, "waist", e.target.value)
-                      }
-                    />
-                  </td>
+                  {["weight", "fat", "bone", "water", "muscle", "balanceIndex", "rmr", "bioAge", "visceralFat", "waist"].map((f) => (
+                    <td key={f}>
+                      <input
+                        type="number"
+                        className="form-control form-control-sm"
+                        value={row[f] || ""}
+                        onChange={(e) =>
+                          handleTrackingChange(idx, f, e.target.value)
+                        }
+                      />
+                    </td>
+                  ))}
                   <td>
                     <button
                       className="btn btn-sm btn-danger"
@@ -377,6 +237,52 @@ export default function Target() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile: Card View */}
+        <div className="d-block d-md-none">
+          {tracking.map((row, idx) => (
+            <div key={idx} className="card mb-3 p-2 shadow-sm">
+              <div className="d-flex justify-content-between">
+                <strong>{row.date}</strong>
+                <button
+                  className="btn btn-sm btn-outline-danger"
+                  onClick={() => removeTrackingRow(idx)}
+                >
+                  <i className="bi bi-trash"></i>
+                </button>
+              </div>
+              <div className="row g-2 mt-2">
+                {[
+                  ["Cân nặng", "weight", "kg"],
+                  ["Mỡ", "fat", "%"],
+                  ["Xương", "bone", ""],
+                  ["Nước", "water", "%"],
+                  ["Cơ", "muscle", ""],
+                  ["Cân đối", "balanceIndex", ""],
+                  ["RMR", "rmr", ""],
+                  ["Tuổi sinh học", "bioAge", ""],
+                  ["Mỡ nội tạng", "visceralFat", ""],
+                  ["Vòng eo", "waist", "cm"],
+                ].map(([label, field, unit]) => (
+                  <div key={field} className="col-6">
+                    <label className="form-label small">{label}</label>
+                    <div className="input-group input-group-sm">
+                      <input
+                        type="number"
+                        className="form-control"
+                        value={row[field] || ""}
+                        onChange={(e) =>
+                          handleTrackingChange(idx, field, e.target.value)
+                        }
+                      />
+                      {unit && <span className="input-group-text">{unit}</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className="mt-2 d-flex gap-2">

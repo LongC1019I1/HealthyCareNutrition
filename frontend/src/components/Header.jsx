@@ -16,10 +16,10 @@ function Header() {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-      <div className="container">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+      <div className="container-fluid">
         {/* Logo */}
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand fw-bold" to="/">
           MyApp
         </Link>
 
@@ -29,19 +29,19 @@ function Header() {
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
 
         {/* Menu */}
-        <div
-          className="collapse navbar-collapse justify-content-end"
-          id="navbarNav"
-        >
+        <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
           {!accessToken ? (
-            <div className="d-flex">
+            <div className="d-flex flex-column flex-lg-row mt-3 mt-lg-0">
               <button
-                className="btn btn-outline-light me-2"
+                className="btn btn-outline-light me-lg-2 mb-2 mb-lg-0"
                 onClick={() => navigate("/login")}
               >
                 Đăng nhập
@@ -54,23 +54,28 @@ function Header() {
               </button>
             </div>
           ) : (
-            <div className="dropdown">
+            <div className="nav-item dropdown text-center text-lg-start">
               <img
                 src={
                   user && user.avatar
                     ? user.avatar
                     : "https://via.placeholder.com/40"
-                } // ảnh avatar mặc định
+                }
                 alt="avatar"
                 className="rounded-circle"
-                style={{ cursor: "pointer", width: "50px", height: "50px", objectFit:"revert" }}
+                style={{
+                  cursor: "pointer",
+                  width: "45px",
+                  height: "45px",
+                  objectFit: "cover",
+                }}
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               />
               <ul
                 className={`dropdown-menu dropdown-menu-end ${
                   dropdownOpen ? "show" : ""
                 }`}
-                style={{ position: "absolute", right: 0 }}
+                style={{ right: 0, left: "auto" }}
               >
                 <li>
                   <Link
